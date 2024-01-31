@@ -1,28 +1,27 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Posts from './Posts';
 import PostDetails from './PostDetails';
+import axios from "axios";
+import AddPost from "./AddPost";
 
 function Dashboard() {
 
-    const [postsState, setPostsState] = useState(
-        [
-            {id: 42, title: 'Some post', author: 'Me!'},
-            {id: 69, title: 'Newer post', author: 'Me!'},
-            {id: 1337, title: 'Unrelated', author: 'Just Dean'},
-        ]
-    )
-    const [inputValue, setInputValue] = useState();
+    const [refreshPosts, setRefreshPosts] = useState(false);
+    const [postsState, setPostsState] = useState([])
     const [selectedPost, setSelectedPost] = useState();
 
-    const handleChangeTitleInputUpdate = (event) => {
-        setInputValue(event.target.value);
-    }
+    const fetchData = () => {
+        axios.get('http://localhost:8080/api/v1/posts')
+            .then(response => {
+                setPostsState(response.data);
+                setRefreshPosts(false);
+                setSelectedPost(null);
+            })
+            .catch(error => console.log(error.message));
+    };
+    useEffect(() => fetchData(), [refreshPosts]);
 
-    const handleFirstPostTitleUpdate = () => {
-        const copy = [...postsState];
-        copy[0].title = inputValue;
-        setPostsState(copy);
-    }
+    const handleDelete = () => setRefreshPosts(true);
 
     return (
         <div className={'dashboard'}>
@@ -32,10 +31,8 @@ function Dashboard() {
             <Posts posts={postsState} selectedPost={selectedPost} setSelectedPost={setSelectedPost}/>
 
             <div>
-                <input type="text" value={inputValue} onChange={handleChangeTitleInputUpdate}/>
-                <button className={'updateBtn'} onClick={handleFirstPostTitleUpdate}>Update</button>
-
-                {selectedPost && <PostDetails post={selectedPost}/>}
+                <AddPost setRefreshPosts={setRefreshPosts}/>
+                {selectedPost && <PostDetails post={selectedPost} handleDelete={handleDelete}/>}
             </div>
         </div>
     );

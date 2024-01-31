@@ -66,22 +66,33 @@
     width: 600px;
     margin: 30px auto 0;
     padding: 12px;
+    text-align: left;
 
     .title {
         margin: 10px 0 0 0;
+        text-align: center
     }
 
     .author {
         text-decoration: underline;
+        text-align: center
     }
 
     .buttons {
         display: flex;
-        justify-content: center;
+        justify-content: right;
         gap: 8px;
 
         .a {
             color: red
+        }
+    }
+
+    .comments {
+        .comment {
+            background: #f3f3f3;
+            padding: 6px 12px;
+            margin-bottom: 6px;
         }
     }
 }
