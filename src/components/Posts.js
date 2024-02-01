@@ -1,12 +1,12 @@
 import React from 'react';
 import Post from './Post';
 
-function Posts({ posts, selectedPost, setSelectedPost }) {
+function Posts({ posts, selectedPostId, setSelectedPostId }) {
 
     return (
         <div className={'posts'}>
             {posts.map(post => (
-                <Post key={post.id} post={post} selectedPost={selectedPost} setSelectedPost={setSelectedPost}/>
+                <Post key={post.id} post={post} selectedPostId={selectedPostId} setSelectedPostId={setSelectedPostId}/>
             ))}
         </div>
     );

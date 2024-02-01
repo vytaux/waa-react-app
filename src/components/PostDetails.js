@@ -1,23 +1,27 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import Comment from "./Comment";
 import { useQuery } from 'react-query';
 
-function PostDetails({ post, handleDelete }) {
+function PostDetails({ selectedPostId, handleDelete }) {
 
-    const [postDetails, setPostDetails] = useState([]);
+    console.log('PostDetails rendered ' + selectedPostId);
 
-    const fetchPost = (id) => {
-        axios.get(`http://localhost:8080/api/v1/posts/${id}`)
+    const [postDetails, setPostDetails] = useState({});
+
+    useEffect(() => {
+        console.log('PostDetails useEffect ' + selectedPostId);
+        axios.get(`http://localhost:8080/api/v1/posts/${selectedPostId}`)
             .then(response => setPostDetails(response.data))
             .catch(error => console.log(error.message));
-    };
+    }, [selectedPostId]);
 
-    useQuery(
-        ['post', post],
-        () => fetchPost(post.id),
-        { enabled: Boolean(post.id) }
-    );
+    // TODO maybe later
+    // useQuery(
+    //     ['selectedPostId', selectedPostId],
+    //     () => fetchPost(selectedPostId),
+    //     { enabled: Boolean(selectedPostId) }
+    // );
 
     const handlePostDelete = (postId) => {
         axios.delete('http://localhost:8080/api/v1/posts/' + postId)

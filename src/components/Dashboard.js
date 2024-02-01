@@ -1,21 +1,24 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Posts from './Posts';
 import PostDetails from './PostDetails';
 import axios from "axios";
 import AddPost from "./AddPost";
+import SelectedPostIdContext from './SelectedPostIdContext';
 
 function Dashboard() {
 
+    console.log('Dashboard rendered');
+
     const [refreshPosts, setRefreshPosts] = useState(false);
     const [postsState, setPostsState] = useState([])
-    const [selectedPost, setSelectedPost] = useState();
+    const {selectedPostId, setSelectedPostId} = useContext(SelectedPostIdContext);
 
     const fetchData = () => {
         axios.get('http://localhost:8080/api/v1/posts')
             .then(response => {
                 setPostsState(response.data);
                 setRefreshPosts(false);
-                setSelectedPost(null);
+                setSelectedPostId(null);
             })
             .catch(error => console.log(error.message));
     };
@@ -28,11 +31,11 @@ function Dashboard() {
             <h1>Dashboard</h1>
 
             <h2>Posts</h2>
-            <Posts posts={postsState} selectedPost={selectedPost} setSelectedPost={setSelectedPost}/>
+            <Posts posts={postsState} selectedPostId={selectedPostId} setSelectedPostId={setSelectedPostId}/>
 
             <div>
                 <AddPost setRefreshPosts={setRefreshPosts}/>
-                {selectedPost && <PostDetails post={selectedPost} handleDelete={handleDelete}/>}
+                {selectedPostId && <PostDetails selectedPostId={selectedPostId} handleDelete={handleDelete}/>}
             </div>
         </div>
     );

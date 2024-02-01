@@ -1,11 +1,11 @@
 import React from 'react';
 
-function Post({ post, selectedPost, setSelectedPost }) {
+function Post({ post, selectedPostId, setSelectedPostId }) {
 
-    const selected = selectedPost === post ? ' selected' : '';
+    const selected = selectedPostId === post.id ? ' selected' : '';
 
     return (
-        <div className={'post' + selected} onClick={() => setSelectedPost(post)}>
+        <div className={'post' + selected} onClick={() => setSelectedPostId(post.id)}>
             <div>Id: {post.id}</div>
             <div>Title: {post.title}</div>
             <div>Author: {post.author}</div>
