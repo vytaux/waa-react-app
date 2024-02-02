@@ -1,5 +1,5 @@
 import React, {useRef} from "react";
-import axios from "axios";
+import FetchService from "../service/FetchService";
 
 function AddPost({ setRefreshPosts }) {
 
@@ -8,14 +8,11 @@ function AddPost({ setRefreshPosts }) {
     const contentInputRef = useRef();
 
     const createPost = () => {
-        axios.post('http://localhost:8080/api/v1/posts', {
-            title: titleInputRef.current.value,
-            author: authorInputRef.current.value,
-            content: contentInputRef.current.value,
-        })
-            .then(response => setRefreshPosts(true))
-            .catch(error => console.log(error.message))
-        ;
+        FetchService.addPost(
+            titleInputRef.current.value,
+            authorInputRef.current.value,
+            contentInputRef.current.value
+        ).then(response => setRefreshPosts(true));
     }
 
     return (

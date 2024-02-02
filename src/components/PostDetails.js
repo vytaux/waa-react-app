@@ -2,19 +2,22 @@ import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import Comment from "./Comment";
 import { useQuery } from 'react-query';
+import {useParams} from "react-router-dom";
+import Cookies from "js-cookie";
+import FetchService, {fetchService} from "../service/FetchService";
 
-function PostDetails({ selectedPostId, handleDelete }) {
+function PostDetails({ setRefreshPosts }) {
 
-    console.log('PostDetails rendered ' + selectedPostId);
+    const { id } = useParams();
+
+    console.log('PostDetails rendered ' + id);
 
     const [postDetails, setPostDetails] = useState({});
 
     useEffect(() => {
-        console.log('PostDetails useEffect ' + selectedPostId);
-        axios.get(`http://localhost:8080/api/v1/posts/${selectedPostId}`)
-            .then(response => setPostDetails(response.data))
-            .catch(error => console.log(error.message));
-    }, [selectedPostId]);
+        FetchService.getPostDetails(id)
+            .then(data => setPostDetails(data));
+    }, [id]);
 
     // TODO maybe later
     // useQuery(
@@ -24,9 +27,8 @@ function PostDetails({ selectedPostId, handleDelete }) {
     // );
 
     const handlePostDelete = (postId) => {
-        axios.delete('http://localhost:8080/api/v1/posts/' + postId)
-            .then(() => handleDelete(postId))
-            .catch(error => console.log(error.message));
+        FetchService.deletePost(postId)
+            .then(() => setRefreshPosts(true));
     }
 
     return (
